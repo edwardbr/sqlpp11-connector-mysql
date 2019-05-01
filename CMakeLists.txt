@@ -72,9 +72,9 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/sqlpp11"
         DESTINATION include
 )
 
-install(TARGETS sqlpp11-connector-mysql
-        EXPORT sqlpp11-connector-mysqlTargets
-)
+#install(TARGETS sqlpp11-connector-mysql
+#        EXPORT sqlpp11-connector-mysql-targets
+#)
 
 include(CMakePackageConfigHelpers)
 
@@ -84,9 +84,9 @@ include(CMakePackageConfigHelpers)
 #  COMPATIBILITY AnyNewerVersion
 #)
 
-export(EXPORT cmake/sqlpp11-connector-mysql-targets
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/sqlpp11-connector-mysql-targets.cmake"
-)
+#export(EXPORT cmake/sqlpp11-connector-mysql-targets
+#  FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/sqlpp11-connector-mysql-targets.cmake"
+#)
 
 configure_file(cmake/sqlpp11-connector-mysql-config.cmake
   "${CMAKE_CURRENT_BINARY_DIR}/cmake/sqlpp11-connector-mysql-config.cmake"
