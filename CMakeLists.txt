@@ -68,6 +68,31 @@ endif()
 
 add_subdirectory(src)
 
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/sqlpp11"
+        DESTINATION include
+)
+
+install(TARGETS sqlpp11-connector-mysql
+        EXPORT sqlpp11-connector-mysqlTargets
+)
+
+include(CMakePackageConfigHelpers)
+
+#write_basic_package_version_file(
+#  "${CMAKE_CURRENT_BINARY_DIR}/cmake/sqlpp11-connector-mysql-ConfigVersion.cmake"
+#  VERSION ${PROJECT_VERSION}
+#  COMPATIBILITY AnyNewerVersion
+#)
+
+export(EXPORT cmake/sqlpp11-connector-mysql-targets
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/sqlpp11-connector-mysql-targets.cmake"
+)
+
+configure_file(cmake/sqlpp11-connector-mysql-config.cmake
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake/sqlpp11-connector-mysql-config.cmake"
+  COPYONLY
+)
+
 if(ENABLE_TESTS)
   add_subdirectory(tests)
 endif()
