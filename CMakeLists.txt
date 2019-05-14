@@ -22,9 +22,22 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-cmake_minimum_required(VERSION 3.2)
-include(CheckCXXSymbolExists)
-project (sqlpp11-connector-mysql)
+cmake_minimum_required(VERSION 3.10.2)
+
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
+include(HunterGate)
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.23.165.tar.gz"
+    SHA1 "5a73f91df5f6109c0bb1104d0c0ee423f7bece79"
+    LOCAL
+)
+
+
+project (sqlpp11-connector-mysql VERSION 0.25)
+
 enable_testing()
 
 option(ENABLE_TESTS "Build unit tests" On)
@@ -39,55 +52,93 @@ endif()
 
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-find_package(MySql REQUIRED)
 
 message(STATUS "Using ${CMAKE_CXX_COMPILER} (compiler id: ${CMAKE_CXX_COMPILER_ID})")
 
-set(DATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../date/include" CACHE FILEPATH "Path to Howard Hinnant's date library")
+hunter_add_package(date)
+find_package(date REQUIRED)
 
-if(NOT EXISTS ${DATE_INCLUDE_DIR}/date/date.h)
-	message(SEND_ERROR "Can't find file date/date.h")
-	message("Can't find date/date.h in ${DATE_INCLUDE_DIR} ")
-	message("Please either")
-	message("  - git clone https://github.com/howardhinnant/date ${DATE_INCLUDE_DIR}")
-	message("  - set DATE_INCLUDE_DIR to point to the dir containing date/date.h from the date library")
-	message("  - e.g. download and unzip a current version from https://github.com/howardhinnant/date to ../date")
-	message("  -      -DDATE_INCLUDE_DIR=../date/include}")
-	message("")
-else()
-	message("including date from ${DATE_INCLUDE_DIR}")
-endif()
 
-set(SQLPP11_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../sqlpp11/include" CACHE FILEPATH "Path to sqlpp11 includes")
+hunter_add_package(Sqlpp11)
+find_package(Sqlpp11 CONFIG REQUIRED)
 
-if(NOT EXISTS ${SQLPP11_INCLUDE_DIR}/sqlpp11/sqlpp11.h)
-	message(SEND_ERROR "Can't find file sqlpp11/sqlpp11.h")
-	message("Can't find sqlpp11/sqlpp11.h in ${SQLPP11_INCLUDE_DIR} ")
-	message("Please either")
-	message("  - git clone https://github.com/rbock/sqlpp11 ${SQLPP11_INCLUDE_DIR}")
-	message("  - download and unzip a current version from https://github.com/rbock/sqlpp11 to ${SQLPP11_INCLUDE_DIR}")
-	message("  - set SQLPP11_INCLUDE_DIR to point to the dir containing sqlpp11/sqlpp11.h")
-	message("")
-else()
-	message("including sqlpp11 from ${SQLPP11_INCLUDE_DIR}")
-endif()
+hunter_add_package(MySQL-client)
+find_package(MySQL-client CONFIG REQUIRED)
+hunter_add_package(Boost )
+find_package(Boost CONFIG)
 
-include_directories("${SQLPP11_INCLUDE_DIR}")
-include_directories("${DATE_INCLUDE_DIR}")
-include_directories("${MYSQL_INCLUDE_DIRS}")
+
 set(include_dir "${PROJECT_SOURCE_DIR}/include")
-file(GLOB_RECURSE sqlpp_headers ${include_dir}/*.h ${SQLPP11_INCLUDE_DIR}/*.h)
-include_directories(${include_dir})
-if (APPLE)
-include_directories("${Boost_INCLUDE_DIR}")
-endif()
+file(GLOB_RECURSE sqlpp_headers ${include_dir}/*.h)
 
 add_subdirectory(src)
 
 if(ENABLE_TESTS)
-  add_subdirectory(tests)
+	add_subdirectory(tests)
 endif()
 
 
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/sqlpp11" DESTINATION include)
+set(pc_config "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc")
+configure_file(${PROJECT_NAME}.pc.in ${pc_config} @ONLY)
 
+set(la_config "${CMAKE_CURRENT_BINARY_DIR}/lib${PROJECT_NAME}.la")
+configure_file(lib${PROJECT_NAME}.la.in ${la_config} @ONLY)
+
+# Installation (https://github.com/forexample/package-example) {
+
+set(config_install_dir "lib/cmake/${PROJECT_NAME}")
+set(include_install_dir "include")
+
+set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
+set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
+set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
+set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
+set(namespace "${PROJECT_NAME}::")
+
+include(CMakePackageConfigHelpers)
+
+# Use:
+#   * PROJECT_VERSION
+write_basic_package_version_file(
+    "${version_config}" COMPATIBILITY SameMajorVersion
+)
+
+# Use variables:
+#   * TARGETS_EXPORT_NAME
+#   * PROJECT_NAME
+configure_package_config_file(
+    "cmake/Config.cmake.in"
+    "${project_config}"
+    INSTALL_DESTINATION "${config_install_dir}"
+)
+
+install(
+    TARGETS ${PROJECT_NAME}
+    EXPORT "${TARGETS_EXPORT_NAME}"
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+    RUNTIME DESTINATION "bin"
+    INCLUDES DESTINATION "${include_install_dir}"
+)
+
+install(
+    FILES ${sqlpp_headers}
+    DESTINATION "${include_install_dir}/${PROJECT_NAME}"
+)
+
+install(
+    FILES "${project_config}" "${version_config}"
+    DESTINATION "${config_install_dir}"
+)
+
+install(
+    EXPORT "${TARGETS_EXPORT_NAME}"
+    NAMESPACE "${namespace}"
+    DESTINATION "${config_install_dir}"
+)
+
+install(FILES ${pc_config} DESTINATION lib/pkgconfig)
+install(FILES ${la_config} DESTINATION lib)
+
+# }

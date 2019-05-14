@@ -1,4 +1,4 @@
-add_library(sqlpp-mysql
+add_library(sqlpp11-connector-mysql
 		connection.cpp
 		prepared_statement.cpp
 		char_result.cpp
@@ -6,7 +6,8 @@ add_library(sqlpp-mysql
 		detail/connection_handle.cpp)
 
 if (APPLE)
-	target_link_libraries(sqlpp-mysql "${Boost_THREAD_LIBRARY}")
+	target_link_libraries(sqlpp11-connector-mysql "${Boost_THREAD_LIBRARY}")
 endif()
 
-install(TARGETS sqlpp-mysql DESTINATION lib)
+install(TARGETS sqlpp11-connector-mysql DESTINATION lib)
+

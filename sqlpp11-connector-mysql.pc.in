@@ -1,0 +1,11 @@
+# Package Information for pkg-config
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+Name: SQLite
+Description: SQL database engine
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lsqlpp11-connector-mysql
+Libs.private: -ldl @pthread_to_config@
+Cflags: -I${includedir}
