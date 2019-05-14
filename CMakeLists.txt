@@ -64,7 +64,8 @@ find_package(Sqlpp11 CONFIG REQUIRED)
 
 hunter_add_package(MySQL-client)
 find_package(MySQL-client CONFIG REQUIRED)
-hunter_add_package(Boost )
+
+hunter_add_package(Boost)
 find_package(Boost CONFIG)
 
 
@@ -85,7 +86,6 @@ set(la_config "${CMAKE_CURRENT_BINARY_DIR}/lib${PROJECT_NAME}.la")
 configure_file(lib${PROJECT_NAME}.la.in ${la_config} @ONLY)
 
 # Installation (https://github.com/forexample/package-example) {
-
 set(config_install_dir "lib/cmake/${PROJECT_NAME}")
 set(include_install_dir "include")
 

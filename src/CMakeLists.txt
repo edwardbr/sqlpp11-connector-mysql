@@ -5,7 +5,7 @@ add_library(sqlpp11-connector-mysql
 		bind_result.cpp
 		detail/connection_handle.cpp)
 
-target_link_libraries(sqlpp11-connector-mysql INTERFACE date_interface sqlpp11)		
+target_link_libraries(sqlpp11-connector-mysql INTERFACE date_interface sqlpp11 MySQL::libmysql)		
 
 if (APPLE)
 	target_link_libraries(sqlpp11-connector-mysql "${Boost_THREAD_LIBRARY}")
