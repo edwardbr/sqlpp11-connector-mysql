@@ -30,7 +30,7 @@
 #include <iostream>
 #include "sqlpp_mysql.h"
 #include <sqlpp11/exception.h>
-#include <sqlpp11/mysql/bind_result.h>
+#include "../include/sqlpp11/mysql/bind_result.h"
 
 namespace sqlpp
 {

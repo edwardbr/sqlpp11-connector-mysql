@@ -32,7 +32,7 @@
 #include <memory>
 #include <sqlpp11/chrono.h>
 #include <sqlpp11/exception.h>
-#include <sqlpp11/mysql/char_result_row.h>
+#include "char_result_row.h"
 
 namespace sqlpp
 {

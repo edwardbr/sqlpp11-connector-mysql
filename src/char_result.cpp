@@ -29,7 +29,7 @@
 #include <ciso646>
 #include <date/date.h>
 #include <iostream>
-#include <sqlpp11/mysql/char_result.h>
+#include "../include/sqlpp11/mysql/char_result.h"
 #include <vector>
 
 namespace sqlpp

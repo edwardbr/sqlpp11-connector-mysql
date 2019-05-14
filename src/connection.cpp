@@ -33,7 +33,7 @@
 #include "detail/prepared_statement_handle.h"
 #include "detail/result_handle.h"
 #include <sqlpp11/exception.h>
-#include <sqlpp11/mysql/connection.h>
+#include "../include/sqlpp11/mysql/connection.h"
 
 namespace sqlpp
 {

@@ -41,7 +41,7 @@
 #include <ciso646>
 #include <date/date.h>
 #include <iostream>
-#include <sqlpp11/mysql/prepared_statement.h>
+#include "../include/sqlpp11/mysql/prepared_statement.h"
 #include <string>
 
 namespace sqlpp

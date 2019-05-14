@@ -28,10 +28,10 @@
 #define SQLPP_MYSQL_CONNECTION_H
 
 #include <sqlpp11/connection.h>
-#include <sqlpp11/mysql/bind_result.h>
-#include <sqlpp11/mysql/char_result.h>
-#include <sqlpp11/mysql/connection_config.h>
-#include <sqlpp11/mysql/prepared_statement.h>
+#include "bind_result.h"
+#include "char_result.h"
+#include "connection_config.h"
+#include "prepared_statement.h"
 #include <sqlpp11/serialize.h>
 #include <sstream>
 #include <string>
@@ -303,6 +303,6 @@ namespace sqlpp
   }
 }
 
-#include <sqlpp11/mysql/serializer.h>
+#include "serializer.h"
 
 #endif

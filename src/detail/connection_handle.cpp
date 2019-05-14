@@ -27,7 +27,7 @@
 #include "connection_handle.h"
 #include <ciso646>
 #include <sqlpp11/exception.h>
-#include <sqlpp11/mysql/connection_config.h>
+#include "../../include/sqlpp11/mysql/connection_config.h"
 
 namespace sqlpp
 {

@@ -24,7 +24,7 @@
  */
 
 #include "TabSample.h"
-#include <sqlpp11/mysql/connection.h>
+#include "../include/sqlpp11/mysql/connection.h"
 #include <sqlpp11/sqlpp11.h>
 
 #include <iostream>
